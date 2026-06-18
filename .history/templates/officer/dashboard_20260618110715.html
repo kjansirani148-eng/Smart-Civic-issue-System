@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Officer Dashboard - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Officer Dashboard</h2>
+<div class="row">
+  {% for name, count in status_counts.items() %}
+  <div class="col-md-3 mb-3"><div class="card p-3 shadow-sm"><h5>{{ name }}</h5><p class="display-6">{{ count }}</p></div></div>
+  {% endfor %}
+</div>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5>Assigned Complaints</h5>
+    {% if assigned %}
+    <div class="list-group">
+      {% for complaint in assigned %}
+      <a href="{{ url_for('officer.complaint_detail', complaint_id=complaint.id) }}" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong>#{{ complaint.id }} {{ complaint.category.name }}</strong>
+            <p class="mb-1">{{ complaint.description[:100] }}{% if complaint.description|length > 100 %}...{% endif %}</p>
+          </div>
+          <span class="badge bg-secondary">{{ complaint.status.name }}</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="mb-0">No assignments yet. Use the complaint list to assign work.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

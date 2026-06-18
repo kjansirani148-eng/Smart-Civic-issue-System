@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Nearby Complaints - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Nearby Complaints</h2>
+<div class="mb-3">
+  <button class="btn btn-outline-primary" onclick="lookupNearby()">Find Nearby Issues</button>
+</div>
+<div id="nearby-list">
+  {% if complaints %}
+    <div class="list-group">
+      {% for complaint in complaints %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5>{{ complaint.category.name }}</h5>
+            <p>{{ complaint.description[:120] }}{% if complaint.description|length > 120 %}...{% endif %}</p>
+            <small>{{ complaint.status.name }} • {{ complaint.created_at.strftime('%Y-%m-%d') }}</small>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Use your location to view nearby civic issues.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function lookupNearby() {
+  if (!navigator.geolocation) return alert('Geolocation is not supported by your browser.');
+  navigator.geolocation.getCurrentPosition(function(position) {
+    window.location.href = `{{ url_for('user.nearby') }}?lat=${position.coords.latitude}&lng=${position.coords.longitude}`;
+  }, function () {
+    alert('Unable to retrieve location. Please allow location access.');
+  });
+}
+</script>
+{% endblock %}

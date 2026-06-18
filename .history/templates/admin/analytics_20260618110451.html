@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Analytics Overview</h2>
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm p-3">
+      <h5>Category Distribution</h5>
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm p-3">
+      <h5>Status Distribution</h5>
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const categoryLabels = {{ category_stats | map(attribute=0) | list | tojson | safe }};
+const categoryData = {{ category_stats | map(attribute=1) | list | tojson | safe }};
+const statusLabels = {{ status_stats | map(attribute=0) | list | tojson | safe }};
+const statusData = {{ status_stats | map(attribute=1) | list | tojson | safe }};
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'bar',
+  data: { labels: categoryLabels, datasets: [{ label: 'Complaints', data: categoryData, backgroundColor: '#0d6efd' }] }
+});
+
+new Chart(document.getElementById('statusChart'), {
+  type: 'pie',
+  data: { labels: statusLabels, datasets: [{ data: statusData, backgroundColor: ['#0d6efd', '#ffc107', '#198754'] }] }
+});
+</script>
+{% endblock %}

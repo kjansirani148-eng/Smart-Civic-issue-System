@@ -1,0 +1,66 @@
+CREATE DATABASE IF NOT EXISTS smart_civic CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE smart_civic;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(50) NOT NULL DEFAULT 'citizen',
+  phone VARCHAR(25),
+  address VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE officers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  department VARCHAR(120),
+  assigned_area VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE categories (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE complaint_status (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(60) NOT NULL UNIQUE,
+  description VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE complaints (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  officer_id INT,
+  category_id INT NOT NULL,
+  status_id INT NOT NULL,
+  description TEXT NOT NULL,
+  latitude DOUBLE,
+  longitude DOUBLE,
+  image_url VARCHAR(255),
+  resolution_image_url VARCHAR(255),
+  remark TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (officer_id) REFERENCES officers(id) ON DELETE SET NULL,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT,
+  FOREIGN KEY (status_id) REFERENCES complaint_status(id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  complaint_id INT NOT NULL,
+  message VARCHAR(255) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (complaint_id) REFERENCES complaints(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

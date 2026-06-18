@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Officers - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Manage Officers</h2>
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h5>Add Officer</h5>
+    <form method="post" class="row gy-3">
+      <div class="col-md-4"><input type="text" name="name" placeholder="Name" class="form-control" required></div>
+      <div class="col-md-4"><input type="email" name="email" placeholder="Email" class="form-control" required></div>
+      <div class="col-md-4"><input type="password" name="password" placeholder="Password" class="form-control" required></div>
+      <div class="col-md-4"><input type="text" name="department" placeholder="Department" class="form-control"></div>
+      <div class="col-md-4"><input type="text" name="assigned_area" placeholder="Assigned area" class="form-control"></div>
+      <div class="col-md-4"><button class="btn btn-primary w-100">Create Officer</button></div>
+    </form>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Area</th></tr></thead>
+    <tbody>
+      {% for officer in officers %}
+      <tr>
+        <td>{{ officer.id }}</td>
+        <td>{{ officer.user.name }}</td>
+        <td>{{ officer.user.email }}</td>
+        <td>{{ officer.department or 'N/A' }}</td>
+        <td>{{ officer.assigned_area or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+      {% if officers|length == 0 %}
+      <tr><td colspan="5" class="text-center">No officers configured.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

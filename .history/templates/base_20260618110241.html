@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Smart Civic Platform{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MuZVJ7RxJYbfJ2ZCqKDhg/uB7Am8A5FubQzD+fhiLDj1qCJ2s8cYM8c7R1AgLI4K" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('main.home') }}">Smart Civic</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            {% if current_user.is_authenticated %}
+              {% if current_user.role == 'citizen' %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('user.dashboard') }}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('user.report') }}">Report Issue</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('user.my_complaints') }}">My Complaints</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('user.profile') }}">Profile</a></li>
+              {% elif current_user.role == 'officer' %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('officer.dashboard') }}">Officer Panel</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('officer.assigned_list') }}">Assigned Work</a></li>
+              {% elif current_user.role == 'admin' %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.manage_users') }}">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.manage_officers') }}">Officers</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.manage_complaints') }}">Complaints</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.manage_categories') }}">Categories</a></li>
+              {% endif %}
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-light text-center py-3 mt-auto">
+      <div class="container">
+        <span class="text-muted">&copy; 2026 Smart Civic Issue Reporting Platform</span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-G2Rsi4zhDOhaDk0YLcN2/3+kKyHgF5iHzbGcbKz0aZsVWIZ51Yp4HGMb4xcp5K7V" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

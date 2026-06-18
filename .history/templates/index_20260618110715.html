@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Smart Civic Issue Reporting{% endblock %}
+
+{% block content %}
+<div class="py-5 text-center">
+  <h1 class="display-5">Smart Civic Issue Reporting Platform</h1>
+  <p class="lead">Report road damage, garbage issues, street light failures, water leakage and drainage blockage in your community.</p>
+  <div class="d-flex justify-content-center gap-2">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}">Get Started</a>
+    <a class="btn btn-outline-primary btn-lg" href="{{ url_for('auth.login') }}">Login</a>
+  </div>
+</div>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3">
+      <div class="card-body">
+        <h5 class="card-title">Citizen Portal</h5>
+        <p class="card-text">Submit complaints, track status, and share updates with local authorities.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3">
+      <div class="card-body">
+        <h5 class="card-title">Officer Portal</h5>
+        <p class="card-text">Manage assignments, update status, and share resolution images from the field.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm p-3">
+      <div class="card-body">
+        <h5 class="card-title">Admin Portal</h5>
+        <p class="card-text">Manage users, categories, complaints, and view analytics trends.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Complaints - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Manage Complaints</h2>
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Assigned Officer</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for complaint in complaints %}
+      <tr>
+        <td>{{ complaint.id }}</td>
+        <td>{{ complaint.user.name }}</td>
+        <td>{{ complaint.category.name }}</td>
+        <td>{{ complaint.status.name }}</td>
+        <td>{{ complaint.officer.user.name if complaint.officer else 'Unassigned' }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin.update_complaint_status', complaint_id=complaint.id) }}" class="row gx-2 gy-2 align-items-center">
+            <div class="col-auto">
+              <select class="form-select" name="status_id">
+                {% for status in statuses %}
+                <option value="{{ status.id }}" {% if status.id == complaint.status_id %}selected{% endif %}>{{ status.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-auto">
+              <input class="form-control" type="number" name="officer_id" placeholder="Officer ID" value="{{ complaint.officer.id if complaint.officer }}" />
+            </div>
+            <div class="col-auto">
+              <button class="btn btn-sm btn-primary">Save</button>
+            </div>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      {% if complaints|length == 0 %}
+      <tr><td colspan="6" class="text-center">No complaints found.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

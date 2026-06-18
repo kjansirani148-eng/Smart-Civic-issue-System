@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Complaint - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Report a Civic Issue</h2>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select class="form-select" name="category_id" required>
+          <option value="">Choose a category</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" name="description" rows="4" required></textarea>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Latitude</label>
+          <input type="text" class="form-control" name="latitude" id="latitude" readonly />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Longitude</label>
+          <input type="text" class="form-control" name="longitude" id="longitude" readonly />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Upload Image</label>
+        <input class="form-control" type="file" name="image" accept="image/*" />
+      </div>
+      <button type="button" class="btn btn-outline-secondary mb-3" onclick="captureLocation()">Auto Capture Location</button>
+      <button class="btn btn-primary">Submit Complaint</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function captureLocation() {
+  if (!navigator.geolocation) return alert('Geolocation is not supported by your browser.');
+  navigator.geolocation.getCurrentPosition(function(position) {
+    document.getElementById('latitude').value = position.coords.latitude.toFixed(6);
+    document.getElementById('longitude').value = position.coords.longitude.toFixed(6);
+  }, function () {
+    alert('Unable to retrieve location. Please allow access and try again.');
+  });
+}
+</script>
+{% endblock %}

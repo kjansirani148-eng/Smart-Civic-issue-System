@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard</h2>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card p-3 shadow-sm"><h5>Total Complaints</h5><p class="display-6">{{ total }}</p></div></div>
+  <div class="col-md-3"><div class="card p-3 shadow-sm"><h5>Open</h5><p class="display-6">{{ open_count }}</p></div></div>
+  <div class="col-md-3"><div class="card p-3 shadow-sm"><h5>In Progress</h5><p class="display-6">{{ in_progress }}</p></div></div>
+  <div class="col-md-3"><div class="card p-3 shadow-sm"><h5>Resolved</h5><p class="display-6">{{ resolved }}</p></div></div>
+</div>
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm p-3">
+      <h5>Category Statistics</h5>
+      <canvas id="categoryChart"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm p-3">
+      <h5>Complaint Trend</h5>
+      <canvas id="trendChart"></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const categoryLabels = {{ category_stats | map(attribute=0) | list | tojson | safe }};
+const categoryValues = {{ category_stats | map(attribute=1) | list | tojson | safe }};
+const trendLabels = {{ trend_data | map(attribute=0) | map('strftime', '%Y-%m-%d') | list | tojson | safe }};
+const trendValues = {{ trend_data | map(attribute=1) | list | tojson | safe }};
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'doughnut',
+  data: {
+    labels: categoryLabels,
+    datasets: [{ data: categoryValues, backgroundColor: ['#0d6efd', '#6610f2', '#198754', '#dc3545', '#fd7e14'] }]
+  }
+});
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: trendLabels,
+    datasets: [{ label: 'Submissions', data: trendValues, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,0.15)', fill: true }]
+  }
+});
+</script>
+{% endblock %}

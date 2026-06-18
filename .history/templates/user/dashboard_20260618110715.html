@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}My Dashboard - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Citizen Dashboard</h2>
+<div class="row">
+  <div class="col-md-3 mb-3"><div class="card p-3 shadow-sm"><h5>Total Reports</h5><p class="display-6">{{ complaints|length }}</p></div></div>
+  {% for name, count in status_counts.items() %}
+  <div class="col-md-3 mb-3"><div class="card p-3 shadow-sm"><h5>{{ name }}</h5><p class="display-6">{{ count }}</p></div></div>
+  {% endfor %}
+</div>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5>Recent Complaints</h5>
+    {% if complaints %}
+    <div class="list-group">
+      {% for complaint in complaints[:5] %}
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <div>
+            <strong>{{ complaint.category.name }}</strong>
+            <p class="mb-1">{{ complaint.description[:100] }}{% if complaint.description|length > 100 %}...{% endif %}</p>
+            <small>{{ complaint.created_at.strftime('%b %d, %Y %H:%M') }}</small>
+          </div>
+          <span class="badge bg-secondary align-self-center">{{ complaint.status.name }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="mb-0">No complaints filed yet. <a href="{{ url_for('user.report') }}">Submit one now</a>.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Assigned Complaints - Smart Civic{% endblock %}
+
+{% block content %}
+<h2>Assigned Complaints</h2>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>User</th>
+        <th>Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for complaint in complaints %}
+      <tr>
+        <td><a href="{{ url_for('officer.complaint_detail', complaint_id=complaint.id) }}">{{ complaint.id }}</a></td>
+        <td>{{ complaint.category.name }}</td>
+        <td>{{ complaint.status.name }}</td>
+        <td>{{ complaint.user.name }}</td>
+        <td>{{ complaint.updated_at.strftime('%Y-%m-%d') }}</td>
+      </tr>
+      {% endfor %}
+      {% if complaints|length == 0 %}
+      <tr><td colspan="5" class="text-center">No assigned work.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
