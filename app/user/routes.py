@@ -17,11 +17,24 @@ def citizen_required():
 @login_required
 def dashboard():
     citizen_required()
-    complaints = Complaint.query.filter_by(user_id=current_user.id).order_by(Complaint.created_at.desc()).all()
+
+    complaints = Complaint.query.filter_by(
+        user_id=current_user.id
+    ).order_by(
+        Complaint.created_at.desc()
+    ).all()
+
+    print("USER ID =", current_user.id)
+    print("COMPLAINT COUNT =", len(complaints))
+
     status_counts = {
-        c.name: Complaint.query.filter_by(user_id=current_user.id, status_id=c.id).count()
+        c.name: Complaint.query.filter_by(
+            user_id=current_user.id,
+            status_id=c.id
+        ).count()
         for c in ComplaintStatus.query.all()
     }
+
     return render_template(
         "user/dashboard.html",
         complaints=complaints,

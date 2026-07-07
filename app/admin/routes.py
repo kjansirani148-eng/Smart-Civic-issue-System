@@ -26,12 +26,13 @@ def dashboard():
         .group_by(Category.name)
         .all()
     )
-    trend_data = (
-        db.session.query(Complaint.created_at, db.func.count(Complaint.id))
+    trend_data_raw = (
+        db.session.query(db.func.date(Complaint.created_at), db.func.count(Complaint.id))
         .group_by(db.func.date(Complaint.created_at))
         .order_by(db.func.date(Complaint.created_at))
         .all()
     )
+    trend_data = [((d.strftime('%Y-%m-%d') if hasattr(d, 'strftime') else str(d)) if d else '', count) for d, count in trend_data_raw]
     return render_template(
         "admin/dashboard.html",
         total=total,

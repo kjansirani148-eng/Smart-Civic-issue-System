@@ -22,7 +22,7 @@ def dashboard():
     status_counts = {
         c.name: Complaint.query.filter_by(officer_id=officer_profile.id, status_id=c.id).count()
         for c in ComplaintStatus.query.all()
-    }
+    } if officer_profile else {c.name: 0 for c in ComplaintStatus.query.all()}
     return render_template(
         "officer/dashboard.html",
         assigned=assigned,

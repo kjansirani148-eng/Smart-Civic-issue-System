@@ -26,6 +26,7 @@
         <td>{{ complaint.officer.user.name if complaint.officer else 'Unassigned' }}</td>
         <td>
           <form method="post" action="{{ url_for('admin.update_complaint_status', complaint_id=complaint.id) }}" class="row gx-2 gy-2 align-items-center">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="col-auto">
               <select class="form-select" name="status_id">
                 {% for status in statuses %}

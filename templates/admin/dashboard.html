@@ -30,7 +30,7 @@
 <script>
 const categoryLabels = {{ category_stats | map(attribute=0) | list | tojson | safe }};
 const categoryValues = {{ category_stats | map(attribute=1) | list | tojson | safe }};
-const trendLabels = {{ trend_data | map(attribute=0) | map('strftime', '%Y-%m-%d') | list | tojson | safe }};
+const trendLabels = {{ trend_data | map(attribute=0) | list | tojson | safe }};
 const trendValues = {{ trend_data | map(attribute=1) | list | tojson | safe }};
 
 new Chart(document.getElementById('categoryChart'), {

@@ -1,7 +1,11 @@
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, ".env"))
+print("DATABASE_URL =", os.getenv("DATABASE_URL"))
+
 
 
 class Config:
